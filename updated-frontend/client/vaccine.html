@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Hog Raising</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #F8F8F9;
+      color: #333;
+    }
+
+    #sidebar {
+      width: 220px;
+      background-color: #051641;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px 10px;
+    }
+
+    #sidebar .nav-link {
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #sidebar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 220px;
+      right: 0;
+      height: 60px;
+      background-color: #031926;
+      color: #E6D8B6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .header .btn {
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 24px;
+      padding: 0;
+    }
+
+    .main-content {
+      margin-left: 240px;
+      padding: 20px;
+    }
+
+    .btn-primary {
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    .table th {
+      background-color: #4CAF50;
+      color: #fff;
+      text-align: center;
+    }
+
+    .table td {
+      background-color: #fff;
+      text-align: center;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f5f5f5;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="sidebar">
+    <div class="text-center mb-4">
+      <img src="asset/IMG.png" alt="Logo" width="180">
+    </div>
+    <nav>
+      <a class="nav-link" href="vitamins.html">
+        <i class="bi bi-capsule me-2"></i> Vitamins
+      </a>
+      <a class="nav-link" href="vaccine.html">
+        <i class="bi bi-shield-plus me-2"></i> Vaccine
+      </a>
+      <a class="nav-link" href="tools.html">
+        <i class="bi bi-tools me-2"></i> Tools
+      </a>
+      <a class="nav-link" href="feeds.html">
+        <i class="bi bi-card-checklist me-2"></i> Task
+      </a>
+    </nav>
+  </div>
+
+  <div class="header">
+    <span style="font-size: 24px; font-weight: bold;">Hog Raising</span>
+    <div class="dropdown">
+      <button class="btn text-white" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-circle"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <li class="dropdown-header">Hello, Daniel De Asis</li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" id="logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="main-content mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <label for="entries" class="form-label me-2">Show Entries:</label>
+        <select id="entries" class="form-select d-inline w-auto">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="new-task" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+        <i class="bi bi-plus-circle"></i> New Task
+      </button>      
+    </div>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>HOG ID</th>
+          <th>TASK</th>
+          <th>QUANTITY</th>
+          <th>DATE</th>
+          <th>TIME</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr>
+          <td>1</td>
+          <td>Feeding</td>
+          <td>10</td>
+          <td>2024-11-21</td>
+          <td>10:00 AM</td>
+          <td>
+            <button class="btn btn-sm btn-warning edit-btn">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-sm btn-danger delete-btn">
+              <i class="bi bi-trash"></i>
+            </button>
+            <button class="btn btn-sm btn-success view-btn">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    © 2024 Hog Raising System. All rights reserved.
+  </footer>
+
+  <!-- Modal for New Task -->
+  <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newTaskModalLabel">Create New Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newTaskForm">
+            <div class="mb-3">
+              <label for="taskName" class="form-label">Task</label>
+              <input type="text" class="form-control" id="taskName" required>
+            </div>
+            <div class="mb-3">
+              <label for="quantity" class="form-label">Quantity</label>
+              <input type="number" class="form-control" id="quantity" required>
+            </div>
+            <div class="mb-3">
+              <label for="taskDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="taskDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="taskTime" class="form-label">Time</label>
+              <input type="time" class="form-control" id="taskTime" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for View Task -->
+  <div class="modal fade" id="viewTaskModal" tabindex="-1" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTaskModalLabel">View Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="viewTaskForm">
+            <div class="mb-3">
+              <label for="viewTaskName" class="form-label">Task Name</label>
+              <input type="text" class="form-control" id="viewTaskName" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewQuantity" class="form-label">Quantity</label>
+              <input type="number" class="form-control" id="viewQuantity" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewTaskDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="viewTaskDate" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewTaskTime" class="form-label">Time</label>
+              <input type="time" class="form-control" id="viewTaskTime" disabled>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Edit Task -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editTaskForm">
+          <input type="hidden" id="editTaskId">
+          
+          <!-- Task Name -->
+          <div class="mb-3">
+            <label for="editTaskName" class="form-label">Task Name</label>
+            <input type="text" class="form-control" id="editTaskName" required>
+          </div>
+          
+          <!-- Quantity -->
+          <div class="mb-3">
+            <label for="editQuantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="editQuantity" required>
+          </div>
+          
+          <!-- Date -->
+          <div class="mb-3">
+            <label for="editTaskDate" class="form-label">Date</label>
+            <input type="date" class="form-control" id="editTaskDate" required>
+          </div>
+          
+          <!-- Time -->
+          <div class="mb-3">
+            <label for="editTaskTime" class="form-label">Time</label>
+            <input type="time" class="form-control" id="editTaskTime" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="updateTask">Update Task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fetch tasks on page load
+      fetchTasks();
+
+      const logout = function() {
+        fetch('/api/user/logout', {
+          method: 'POST',
+        });
+        window.location = '/login.html';
+      }
+
+      document.getElementById('logout').addEventListener('click', async function () {
+        logout();
+      });
+
+      // Add click listener to the table body for delete and other actions
+      document.getElementById('table-body').addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Handle delete button
+        if (target.closest('.delete-btn')) {
+          const taskId = target.closest('.delete-btn').getAttribute('data-task-id');
+          deleteTask(taskId);
+        }
+
+        // Handle edit button
+        if (target.closest('.edit-btn')) {
+          const taskId = target.closest('.edit-btn').getAttribute('data-task-id');
+          editTask(taskId);
+        }
+
+        // Handle view button
+        if (target.closest('.view-btn')) {
+          const taskId = target.closest('.view-btn').getAttribute('data-task-id');
+          viewTask(taskId);
+        }
+      });
+    });
+    function fetchTasks() {
+      fetch('/api/vaccine/get-all-tasks')
+          .then(response => response.json())
+          .then(data => {
+              const tableBody = document.getElementById('table-body');
+              tableBody.innerHTML = '';
+
+              if (!data.data || !Array.isArray(data.data)) {
+                  console.error('Invalid tasks data:', data);
+                  tableBody.innerHTML = '<tr><td colspan="6">No tasks found</td></tr>';
+                  return;
+              }
+
+              data.data.forEach(task => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                      <td>${task.hogId}</td>
+                      <td>${task.taskName}</td>
+                      <td>${task.quantity}</td>
+                      <td>${task.date}</td>
+                      <td>${task.time}</td>
+                      <td>
+                          <button class="btn btn-sm btn-warning edit-btn" data-task-id="${task.taskId}">
+                              <i class="bi bi-pencil-square"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger delete-btn" data-task-id="${task.taskId}">
+                              <i class="bi bi-trash"></i>
+                          </button>
+                          <button class="btn btn-sm btn-success view-btn" data-task-id="${task.taskId}">
+                              <i class="bi bi-eye"></i>
+                          </button>
+                      </td>
+                  `;
+                  tableBody.appendChild(row);
+              });
+          })
+          .catch(error => console.error('Error fetching tasks:', error));
+      }
+
+
+    // Save new task
+    document.getElementById('saveTask').addEventListener('click', () => {
+      const taskName = document.getElementById('taskName').value;
+      const quantity = document.getElementById('quantity').value;
+      const taskDate = document.getElementById('taskDate').value;
+      const taskTime = document.getElementById('taskTime').value;
+
+      fetch('/api/vaccine/create-task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskName: taskName, quantity, date: taskDate, time: taskTime })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200) {
+            fetchTasks();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('newTaskModal'));
+            modal.hide();
+          } else {
+            alert('Failed to create task: ' + data.error);
+          }
+        })
+        .catch(error => console.error('Error saving task:', error));
+    });
+
+    function viewTask(taskId) {
+      fetch(`/api/vaccine/get-task?taskId=${taskId}`, { 
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Received data:', data); 
+          if (data.status === 200 && data.data) {
+            const task = data.data;
+
+            // Set the value of each input field instead of textContent
+            document.getElementById('viewTaskName').value = task.taskName;
+            document.getElementById('viewQuantity').value = task.quantity;
+            document.getElementById('viewTaskDate').value = task.date;
+            document.getElementById('viewTaskTime').value = task.time;
+
+            const viewModal = new bootstrap.Modal(document.getElementById('viewTaskModal'));
+            viewModal.show();
+          } else {
+            alert('Failed to fetch task details: ' + (data.error || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching task details:', error);
+          alert('An error occurred while fetching task details.');
+        });
+    }
+    function editTask(taskId) {
+      fetch(`/api/vaccine/get-task?taskId=${taskId}`, { 
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Received data:', data); 
+          if (data.status === 200 && data.data) {
+            const task = data.data;
+
+            document.getElementById('editTaskName').value = task.taskName;
+            document.getElementById('editQuantity').value = task.quantity;
+            document.getElementById('editTaskDate').value = task.date;
+            document.getElementById('editTaskTime').value = task.time;
+            document.getElementById('editTaskId').value = task.taskId;
+
+            const editModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+            editModal.show();
+          } else {
+            alert('Failed to fetch task details: ' + (data.error || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching task details:', error);
+          alert('An error occurred while fetching task details.');
+        });
+    }
+
+    document.getElementById('updateTask').addEventListener('click', () => {
+    updateTask();
+  });
+
+    document.getElementById('editTaskModal').addEventListener('hidden.bs.modal', () => {
+    
+    document.getElementById('editTaskName').value = '';
+    document.getElementById('editQuantity').value = '';
+    document.getElementById('editTaskDate').value = '';
+    document.getElementById('editTaskTime').value = '';
+    document.getElementById('editTaskId').value = '';
+  });
+
+  function updateTask() {
+  // Retrieve values from the edit modal
+    const taskId = document.getElementById('editTaskId').value.trim();
+    const taskName = document.getElementById('editTaskName').value.trim();
+    const quantity = document.getElementById('editQuantity').value.trim();
+    const taskDate = document.getElementById('editTaskDate').value;
+    const taskTime = document.getElementById('editTaskTime').value;
+
+    // Basic Validation
+    if (!taskId) {
+      alert('Task ID is missing.');
+      return;
+    }
+
+    // Prepare the data to be sent to the server
+    const updatedTaskData = {
+      taskId: taskId,
+      taskName: taskName,
+      quantity: quantity,
+      date: taskDate,
+      time: taskTime
+    };
+
+    fetch('/api/vaccine/update-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedTaskData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 200) {
+          fetchTasks();
+          const editModalEl = document.getElementById('editTaskModal');
+          const editModal = bootstrap.Modal.getInstance(editModalEl);
+          editModal.hide();
+        } else {
+          alert('Failed to update task: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error updating task:', error);
+        alert('An error occurred while updating the task.');
+      });
+  }
+
+    function deleteTask(taskId) {
+      fetch(`/api/vaccine/delete-task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId: taskId })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200) {
+            fetchTasks(); 
+          } else {
+            alert('Failed to delete task: ' + data.error);
+          }
+        })
+        .catch(error => console.error('Error deleting task:', error));
+    }
+
+  </script>
+</body>
+</html>

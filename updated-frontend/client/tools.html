@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Hog Raising</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #F8F8F9;
+      color: #333;
+    }
+
+    /* Sidebar Styling */
+    #sidebar {
+      width: 220px;
+      background-color: #051641;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px 10px;
+      box-sizing: border-box; /* Ensure padding is included in the width */
+    }
+
+    #sidebar .nav-link {
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #sidebar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Header Styling */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 220px; /* Align with sidebar width */
+      right: 0;
+      height: 60px;
+      background-color: #031926;
+      color: #E6D8B6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+
+    .header .btn {
+      background: none;
+      border: none;
+      color: #fff; /* Changed to white for better visibility */
+      font-size: 24px;
+      padding: 0;
+    }
+
+    /* Main Content Styling */
+    .main-content {
+      margin-left: 220px; /* Match the sidebar width */
+      padding: 80px 20px 20px 20px; /* Add top padding to account for fixed header */
+      box-sizing: border-box;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    /* Table Styling */
+    .table th {
+      background-color: #4CAF50;
+      color: #fff;
+      text-align: center;
+    }
+
+    .table td {
+      background-color: #fff;
+      text-align: center;
+      vertical-align: middle; /* Center content vertically */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f5f5f5;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .header {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 80px 10px 10px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="text-center mb-4">
+      <img src="asset/IMG.png" alt="Logo" width="180">
+    </div>
+    <nav>
+      <a class="nav-link" href="vitamins.html">
+        <i class="bi bi-capsule me-2"></i> Vitamins
+      </a>
+      <a class="nav-link" href="vaccine.html">
+        <i class="bi bi-shield-plus me-2"></i> Vaccine
+      </a>
+      <a class="nav-link" href="tools.html">
+        <i class="bi bi-tools me-2"></i> Tools
+      </a>
+      <a class="nav-link" href="feeds.html">
+        <i class="bi bi-card-checklist me-2"></i> Task
+      </a>
+    </nav>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <span style="font-size: 24px; font-weight: bold;">Hog Raising</span>
+    <div class="dropdown">
+      <button class="btn text-white" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-circle"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <li class="dropdown-header">Hello, Daniel</li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" id="logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Controls -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <label for="entries" class="form-label me-2">Show Entries:</label>
+        <select id="entries" class="form-select d-inline w-auto">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="new-task" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+        <i class="bi bi-plus-circle"></i> New Stock
+      </button>
+    </div>
+
+    <!-- Task Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>PRODUCT ID</th>
+            <th>PRODUCT</th>
+            <th>QUANTITY</th>
+            <th>EXPIRATION</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Sample Row (Ensure all 7 columns are populated) -->
+          <tr>
+            <td>2024-11-21</td> <!-- DATE -->
+            <td>1</td> <!-- PRODUCT ID -->
+            <td>Feeding</td> <!-- PRODUCT -->
+            <td>10</td> <!-- QUANTITY -->
+            <td>2025-11-21</td> <!-- EXPIRATION -->
+            <td>Active</td> <!-- STATUS -->
+            <td>
+              <button class="btn btn-sm btn-warning edit-btn" data-task-id="1">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn btn-sm btn-danger delete-btn" data-task-id="1">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button class="btn btn-sm btn-success view-btn" data-task-id="1">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2024 Hog Raising System. All rights reserved.
+  </footer>
+
+  <!-- Modals -->
+
+  <!-- Modal for New Task -->
+  <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newTaskModalLabel">Create New Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newTaskForm">
+            <div class="mb-3">
+              <label for="taskName" class="form-label">Product</label>
+              <input type="text" class="form-control" id="taskName" required>
+            </div>
+            <div class="mb-3">
+              <label for="quantity" class="form-label">Quantity</label>
+              <input type="number" class="form-control" id="quantity" required>
+            </div>
+            <div class="mb-3">
+              <label for="taskDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="taskDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="expiration" class="form-label">Expiration</label>
+              <input type="date" class="form-control" id="expiration" required>
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" required>
+                <option value="Available">Available</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal for View Task -->
+  <div class="modal fade" id="viewTaskModal" tabindex="-1" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTaskModalLabel">View Stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="viewTaskForm">
+            <div class="mb-3">
+              <label for="viewTaskName" class="form-label">Product</label>
+              <input type="text" class="form-control" id="viewTaskName" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewQuantity" class="form-label">Quantity</label>
+              <input type="number" class="form-control" id="viewQuantity" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewTaskDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="viewTaskDate" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewTaskTime" class="form-label">Expiration</label>
+              <input type="date" class="form-control" id="viewTaskTime" disabled>
+            </div>
+            <div class="mb-3">
+              <label for="viewTaskStatus" class="form-label">Status</label>
+              <input type="text" class="form-control" id="viewTaskStatus" disabled>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal for Edit Task -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editTaskForm">
+        <div class="modal-body">
+          <input type="hidden" id="editTaskId">
+          <!-- Task Name -->
+          <div class="mb-3">
+            <label for="editTaskName" class="form-label">Product</label>
+            <input type="text" class="form-control" id="editTaskName" required>
+          </div>
+          <!-- Quantity -->
+          <div class="mb-3">
+            <label for="editQuantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="editQuantity" required>
+          </div>
+          <!-- Date -->
+          <div class="mb-3">
+            <label for="editTaskDate" class="form-label">Date</label>
+            <input type="date" class="form-control" id="editTaskDate" required>
+          </div>
+          <!-- Expiration -->
+          <div class="mb-3">
+            <label for="editTaskTime" class="form-label">Expiration</label>
+            <input type="date" class="form-control" id="editTaskTime" required>
+          </div>
+          <!-- Status -->
+          <div class="mb-3">
+            <label for="editTaskStatus" class="form-label">Status</label>
+            <select class="form-select" id="editTaskStatus">
+              <option value="Available">Available</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+        <!-- Move the modal footer inside the form -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="updateTask">Update Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchStocks();
+
+      const logout = function () {
+        fetch('/api/user/logout', {
+          method: 'POST',
+        });
+        window.location = '/login.html';
+      }
+
+      document.getElementById('logout').addEventListener('click', async function () {
+        logout();
+      });
+
+      // Add click listener to the table body for delete and other actions
+      document.getElementById('table-body').addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Handle delete button
+        if (target.closest('.delete-btn')) {
+          const stockId = target.closest('.delete-btn').getAttribute('data-task-id');
+          if (confirm('Are you sure you want to delete this task?')) {
+            deleteStock(stockId);
+          }
+        }
+
+        // Handle edit button
+        if (target.closest('.edit-btn')) {
+          const stockId = target.closest('.edit-btn').getAttribute('data-task-id');
+          editStock(stockId);
+        }
+
+        // Handle view button
+        if (target.closest('.view-btn')) {
+          const stockId = target.closest('.view-btn').getAttribute('data-task-id');
+          viewStock(stockId);
+        }
+
+      });
+
+      // Save new task
+      document.getElementById('saveTask').addEventListener('click', () => {
+        const stockName = document.getElementById('taskName').value.trim();
+        const quantity = document.getElementById('quantity').value.trim();
+        const stockDate = document.getElementById('taskDate').value;
+        const stockExpiration = document.getElementById('expiration').value;
+        const stockStatus = document.getElementById('status').value;
+
+        if (!stockName || !quantity || !stockDate || !stockExpiration || !stockStatus) {
+          alert('Please fill in all fields.');
+          return;
+        }
+
+        fetch('/api/tool/create-stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stockName, quantity, date: stockDate, expiration: stockExpiration, status: stockStatus })
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Server response:', data); 
+            if (data.status === 200) {
+              fetchStocks();
+
+              const modal = bootstrap.Modal.getInstance(document.getElementById('newTaskModal'));
+              modal.hide();
+              document.getElementById('newTaskForm').reset(); 
+            } else {
+              alert('Failed to create stock: ' + data.error);
+            }
+          })
+          .catch(error => console.error('Error saving stock:', error));
+      });
+
+      // Update task
+      document.getElementById('updateTask').addEventListener('click', () => {
+        updateStock();
+      });
+    });
+
+    // Fetch Tasks Function
+    function fetchStocks() {
+      fetch('/api/tool/get-all-stocks')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const tableBody = document.getElementById('table-body');
+          tableBody.innerHTML = '';
+
+          if (!data.data || !Array.isArray(data.data)) {
+            console.error('Invalid stock data:', data);
+            tableBody.innerHTML = '<tr><td colspan="7">No stock found</td></tr>';
+            return;
+          }
+
+          data.data.forEach(stock => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${stock.date || '-'}</td>
+              <td>${stock.productId || '-'}</td>
+              <td>${stock.stockName || '-'}</td>
+              <td>${stock.quantity || '-'}</td>
+              <td>${stock.expiration || '-'}</td>
+              <td>${stock.status || '-'}</td>
+              <td>
+                <button class="btn btn-sm btn-warning edit-btn" data-task-id="${stock.stockId}">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-danger delete-btn" data-task-id="${stock.stockId}">
+                  <i class="bi bi-trash"></i>
+                </button>
+                <button class="btn btn-sm btn-success view-btn" data-task-id="${stock.stockId}">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching stocks:', error);
+          document.getElementById('table-body').innerHTML = '<tr><td colspan="7">Failed to load stocks</td></tr>';
+        });
+    }
+
+
+    // View Task Function
+    function viewStock(stockId) {
+      fetch(`/api/tool/get-stock?stockId=${stockId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200 && data.data) {
+            const stock = data.data;
+
+            // Set the value of each input field
+            document.getElementById('viewTaskName').value = stock.stockName;
+            document.getElementById('viewQuantity').value = stock.quantity;
+            document.getElementById('viewTaskDate').value = stock.date;
+            document.getElementById('viewTaskTime').value = stock.expiration;
+            document.getElementById('viewTaskStatus').value = stock.status;
+
+            const viewModal = new bootstrap.Modal(document.getElementById('viewTaskModal'));
+            viewModal.show();
+          } else {
+            alert('Failed to fetch stock details: ' + (data.error || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching stock details:', error);
+          alert('An error occurred while fetching stock details.');
+        });
+    }
+
+    // Edit Task Function
+    function editStock(stockId) {
+      fetch(`/api/tool/get-stock?stockId=${stockId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200 && data.data) {
+            const stock = data.data;
+
+            document.getElementById('editTaskId').value = stock.stockId;
+            document.getElementById('editTaskName').value = stock.stockName;
+            document.getElementById('editQuantity').value = stock.quantity;
+            document.getElementById('editTaskDate').value = stock.date;
+            document.getElementById('editTaskTime').value = stock.expiration;
+            document.getElementById('editTaskStatus').value = stock.status;
+
+            const editModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+            editModal.show();
+          } else {
+            alert('Failed to fetch stock details: ' + (data.error || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching stock details:', error);
+          alert('An error occurred while fetching stock details.');
+        });
+    }
+
+    function updateStock() {
+  // Retrieve values from the edit modal
+  const stockId = document.getElementById('editTaskId').value.trim();
+  const stockName = document.getElementById('editTaskName').value.trim();
+  const quantity = document.getElementById('editQuantity').value.trim();
+  const date = document.getElementById('editTaskDate').value;
+  const expiration = document.getElementById('editTaskTime').value;
+  const status = document.getElementById('editTaskStatus').value;
+
+  // Prepare the data to be sent to the server
+  const updatedStockData = {
+    stockId,
+    stockName,
+    quantity,
+    date,
+    expiration,
+    status
+  };
+
+  fetch('/api/tool/update-stock', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedStockData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 200) {
+
+        const editModalEl = document.getElementById('editTaskModal');
+        const editModal = bootstrap.Modal.getInstance(editModalEl);
+        editModal.hide();
+
+        fetchStocks(); 
+      } else {
+        alert('Failed to update stock: ' + (data.error || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      console.error('Error updating stock:', error);
+      alert('An error occurred while updating the stock.');
+    });
+}
+
+
+    // Delete Task Function
+    function deleteStock(stockId) {
+      fetch(`/api/tool/delete-stock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stockId})
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200) {
+            fetchStocks();
+          } else {
+            alert('Failed to delete stock: ' + data.error);
+          }
+        })
+        .catch(error => console.error('Error deleting stock:', error));
+    }
+  </script>
+</body>
+
+</html>
